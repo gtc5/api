@@ -2,7 +2,7 @@ let express = require("express");
 let app = express();
 let bodyParser = require("body-parser");
 
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 
 app.get("/", function(req, res){
   res.send("hello");
