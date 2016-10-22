@@ -2,7 +2,6 @@ let mongodb = require("mongodb");
 
 let MongoClient = mongodb.MongoClient;
 const url = "mongodb://localhost:27017/gtc5"
-const PORT = process.env.PORT || 33033;
 
 var promise = MongoClient.connect(url).then(function(db){
   console.log("Connected to MongoDB");
