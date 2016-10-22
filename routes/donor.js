@@ -2,7 +2,8 @@ let app = require("express")();
 let Database = require("../Database");
 
 app.get("/adddelivery", function(req, res){
-  //Posts a pickup request, returns id of delivery
+  //Creates a delivery.
+  
 });
 app.get("/getdelivery", function(req, res, next){
   Database.then(function(db){
