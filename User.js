@@ -1,7 +1,8 @@
 let Database = require("./Database");
 
-module.exports = function(collection, username, password){
-  Database.then(function(db){
-  	return db.collection(collection).find();
-  })
-};
+//module.exports = class {
+	//(collection, username, password)
+//  Database.then(function(db){
+//  	return db.collection(collection).find();
+//  });
+//};

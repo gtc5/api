@@ -1,4 +1,4 @@
-let Database = require("./Database");
+let Database = require("./User");
 
 module.exports = function(username, password){
   Database.then(function(db){
