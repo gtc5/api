@@ -3,7 +3,7 @@ let app = require("express")();
 let jwt = require("jsonwebtoken");
 
 function auth(username, password){
-  
+  return new Promise(function(resolve, reject){resolve();});
 }
 
 app.get("/auth", function(req, res){

@@ -4,14 +4,14 @@ let Database = require("../Database");
 app.get("/adddelivery", function(req, res){
   //Posts a pickup request, returns id of delivery
 });
-app.get("/getdelivery", function(req, res){
+app.get("/getdelivery", function(req, res, next){
+  console.log("got");
   Database.then(function(db){
-  	db.collection("deliveries").find().toArray().then(function(err, items){
-      if(err)
-    	return next(err);
-      res.send(JSON.stringify(items[0]));
-      console.log("Stuff");
-    });
+  	return db.collection("deliveries").find().toArray();
+  }).then(function(items){
+    res.send(JSON.stringify(items[0]));
+  }).catch(function(err){
+    console.error(err);
   });
 });
 app.get("/pickedup", function(req, res){

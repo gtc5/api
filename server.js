@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 33033;
 //let Delivery = require("./Delivery");
 //let Volunteer = require("./Volunteer");
 
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({extended: false}));
 
 
 app.get("/", function(req, res){ res.send("Second Harvest API Server"); });
