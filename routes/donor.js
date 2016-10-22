@@ -5,9 +5,8 @@ app.get("/adddelivery", function(req, res){
   //Posts a pickup request, returns id of delivery
 });
 app.get("/getdelivery", function(req, res, next){
-  console.log("got");
   Database.then(function(db){
-  	return db.collection("deliveries").find().toArray();
+    return db.collection("deliveries").find().toArray();
   }).then(function(items){
     res.send(JSON.stringify(items[0]));
   }).catch(function(err){
