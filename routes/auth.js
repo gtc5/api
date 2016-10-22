@@ -9,7 +9,7 @@ function auth(collection, username, password){
     return db.collection(collection).find({username: username}).toArray();
   }).then(function(items){
     if(!items || !items[0] || items[0].passhash != items[0].salt + password)
-      throw new Error("Wrong username or password.");
+      throw new Error("Incorrect username or password.");
   }).then(genToken)
   .then(function(token){
     db.collection(collection).update({username: username}, {"$set": {token: token}});
@@ -28,27 +28,27 @@ function checkToken(collection, token){
   return Database.then(function(db){
     return db.collection(collection).find({token: token}).toArray();
   }).then(function(items){
-    if(!items || !items[0])
-      throw new Error("Wrong token.");
+    if(!token || !items || !items[0] || items[0].token != token)
+      throw new Error("Invalid token.");
   });
 }
 
 app.get("/donor/auth", function(req, res, next){
   auth("donors", req.query.username, req.query.password)
   .then(function(token){res.send({token: token});})
-  .catch(next);
+  .catch(function(){res.send({error: "Incorrect username or password."});});
 });
 app.get("/donor/*", function(req, res, next){
-  checkToken("donors", req.query.token).then(next).catch(next);
+  checkToken("donors", req.query.token).then(next).catch(function(){res.send({error: "Invalid token."});});
 });
 
 app.get("/volunteer/auth", function(req, res, next){
   auth("donors", req.query.username, req.query.password)
   .then(function(token){res.send({token: token});})
-  .catch(next);
+  .catch(function(){res.send({error: "Incorrect username or password."});});
 });
 app.get("/volunteer/*", function(req, res, next){
-  checkToken("donors", req.query.token).then(next).catch(next);
+  checkToken("donors", req.query.token).then(next).catch(function(){res.send({error: "Invalid token."});});
 });
 
 module.exports = app;
