@@ -17,7 +17,7 @@ Database.then(function(db){
 	  {donor: "Alexander Hamilton",
 	  donorId: id,
 	  location: "New York City, New York, USA",
-	  time: "2 Nov 1945 9:30:22PM",
+	  takeBy: "2 Nov 1945 9:30:22PM",
 	  location: "460 King St. West",
       food: "46 pounds of lettuce",
 	  status: 0}
