@@ -1,0 +1,23 @@
+{
+  "name": "gtc5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gtc5/project.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gtc5/project/issues"
+  },
+  "homepage": "https://github.com/gtc5/project#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
