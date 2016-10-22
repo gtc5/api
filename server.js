@@ -1,20 +1,27 @@
 let express = require("express");
 let app = express();
 let bodyParser = require("body-parser");
-let mongodb = require("mongodb");
 
-let MongoClient = mongodb.MongoClient;
-const url = "mongodb://localhost:27017/gtc5"
-const PORT = process.env.PORT || 33033;
+let Database = require("./Database");
+let Delivery = require("./Delivery");
 
-var db;
-MongoClient.connect(url).then(function(_db){
-  console.log("Connected to MongoDB");
-  db = _db;
-}).catch(function(err){
-  console.error(err);
-});
+function jsonpDump(collection, req, res){
+  Database.then(function(db){
+    return collection(collection).find().toArray();
+  }).then(function(result){
+    if(req.query.callback)
+      res.write(req.query.callback.replace(/[^\w\.]/g, '') + "(");
 
+    res.write(JSON.stringify(result));
+
+    if(req.query.callback)
+      res.write(");");
+
+    res.end();
+  }).catch(function(err){
+    console.error(err);
+  });
+}
 
 app.use(bodyParser.urlencoded());
 
@@ -22,30 +29,20 @@ app.get("/", function(req, res){
   res.send("Second Harvest API Server");
 });
 
+// location-time pairs
 app.get("/volunteers", function(req, res){
-  db.collection("volunteers").find().toArray().then(function(result){
-    if(req.query.callback)
-      res.write(req.query.callback.replace(/[^\w\.]/g, '') + "(");
-    res.write(JSON.stringify(result));
-    if(req.query.callback)
-      res.write(");");
-    res.end();
-  }).catch(function(err){
-    console.error(err);
-  });
+  jsonpDump("volunteers", req, res);
 });
 
+// location
 app.get("/donors", function(req, res){
-  db.collection("donors").find().toArray().then(function(result){
-    if(req.query.callback)
-      res.write(req.query.callback.replace(/[^\w\.]/g, '') + "(");
-    res.write(JSON.stringify(result));
-    if(req.query.callback)
-      res.write(");");
-    res.end();
-  }).catch(function(err){
-    console.error(err);
-  });
+  jsonpDump("donors", req, res);
+});
+
+// donor ID, pickup time, pickup location, food type, food quantity, volunteer ID, 
+// time of posting, time of confirmation, time of pickup, time of delivery
+app.get("/deliveries", function(req, res){
+  jsonpDump("deliveries", req, res);
 });
 
 app.post("/signin", function(req, res){
