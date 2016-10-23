@@ -64,7 +64,7 @@ function createAccount(collection, entry, req, res){
   }).then(function(inserted){
     res.send({_id: entry._id.toString()});
   }).catch(function(err){
-    res.send({error: err});
+    res.send(500, {error: err});
   });
 }
 
@@ -77,7 +77,7 @@ var collection = null, props = null;
 app.get("/auth", function(req, res){
   auth(collection, req.query.username, req.query.password)
   .then(function(token){res.send({token: token});})
-  .catch(function(err){console.error(err);res.send({error: "Incorrect username or password."});});
+  .catch(function(err){console.error(err);res.send(401, {error: "Incorrect username or password."});});
 });
 app.get("/register", function(req, res){
   var entry = {};
@@ -89,7 +89,7 @@ app.get("/*", function(req, res, next){
   getUserByToken(collection, tokenFrom(req))
   .then(function(user){req.user = user; user._id = user._id.toString();})
   .then(next)
-  .catch(function(){res.send({error: "Invalid token."});});
+  .catch(function(){res.send(401, {error: "Invalid token."});});
 });
 
 

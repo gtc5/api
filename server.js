@@ -16,7 +16,7 @@ app.use("/donor", require("./routes/auth")("donors", ["name", "location"]), requ
 app.use("/volunteer", require("./routes/auth")("volunteers", ["name", "availability"]), require("./routes/volunteer"));
 
 app.use(function(err, req, res, next){
-  res.send("Oops, something broke! Error message: " + err);
+  res.send(500, "Oops, something broke! Error message: " + err);
   console.error(err);
 });
 
