@@ -25,16 +25,14 @@ app.get("/adddelivery", function(req, res, next){
   Database.then(function(db){
     return db.collection("deliveries").insert(del);
   }).then(function(){
-    res.send({id:del._id});
+    res.send({_id: del._id});
   }).catch(next);
 });
 
 app.get("/getdelivery", function(req, res, next){
   Database.then(function(db){
-    return db.collection("deliveries").findOne({donorId: req.user._id, status: {"$ne": 3}});
-  }).then(function(item){
-    res.send(JSON.stringify(item));
-  }).catch(next);
+    return db.collection("deliveries").find({donorId: req.user._id, status: {"$ne": 3}});
+  }).then(res.send).catch(next);
 });
 
 app.get("/pickedup", Database.deliveryUpdate(

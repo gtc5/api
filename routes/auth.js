@@ -62,7 +62,7 @@ function createAccount(collection, entry, req, res){
   }).then(function(db){
     return db.collection(collection).insert(entry);
   }).then(function(inserted){
-    res.send({id: entry._id.toString()});
+    res.send({_id: entry._id.toString()});
   }).catch(function(err){
     res.send({error: err});
   });

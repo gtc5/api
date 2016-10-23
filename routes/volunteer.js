@@ -4,8 +4,10 @@ let Database = require("gtc5-db");
 app.get("/availableDeliveries", function(req, res){
   
 });
-app.get("/myDeliveries", function(req, res){
-  
+app.get("/myDeliveries", function(req, res, next){
+  Database.then(function(db){
+    db.collection("volunteer").find({volunteerId: new (require("mongodb").ObjectID)(req.user._id)});
+  }).then(res.send).catch(next);
 });
 app.get("/assign", Database.deliveryUpdate(
   req=>({_id: new (require("mongodb").ObjectID)(req.params.deliveryId), status: 0}),
