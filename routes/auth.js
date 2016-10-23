@@ -72,7 +72,7 @@ function tokenFrom(req){
   return req.header("Authorization") || req.query.token;
 }
 
-var collection = null;
+var collection = null, props = null;
 
 app.get("/auth", function(req, res){
   auth(collection, req.query.username, req.query.password)
@@ -81,8 +81,8 @@ app.get("/auth", function(req, res){
 });
 app.get("/register", function(req, res){
   var entry = {};
-  entry.name = req.query.name;
-  entry.location = req.query.location;
+  for(var i = 0; i < props.length; i++)
+    entry[props[i]] = req.query[props[i]];
   createAccount(collection, entry, req, res);
 });
 app.get("/*", function(req, res, next){
@@ -93,6 +93,8 @@ app.get("/*", function(req, res, next){
 });
 
 
-module.exports = function(collection){
+module.exports = function(_collection, _props){
+  collection = _collection;
+  props = _props;
   return app;
 };

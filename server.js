@@ -10,12 +10,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.get("/", function(req, res){ res.send("Second Harvest API Server"); });
 
-app.use("/apply", require("./routes/apply"));
-
 //Individual handling for these api routes
 app.use("/admin", require("./routes/admin"));
-app.use("/donor", require("./routes/auth")("donors"), require("./routes/donor"));
-app.use("/volunteer", require("./routes/auth")("volunteers"), require("./routes/volunteer"));
+app.use("/donor", require("./routes/auth")("donors", ["name", "location"]), require("./routes/donor"));
+app.use("/volunteer", require("./routes/auth")("volunteers", ["name", "availability"]), require("./routes/volunteer"));
 
 app.use(function(err, req, res, next){
   res.send("Oops, something broke! Error message: " + err);
