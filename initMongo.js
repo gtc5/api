@@ -1,6 +1,8 @@
 /* NOT NEEDED ANYMORE */
 /* USE register INSTEAD */
 
+process.exit(0);
+
 let Database = require("gtc5-db");
 
 // Volunteer
