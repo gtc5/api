@@ -1,5 +1,5 @@
 let app = require("express")();
-let Database = require("../Database");
+let Database = require("db");
 
 app.get("/adddelivery", function(req, res){
   //Creates a delivery.

@@ -1,6 +1,6 @@
 let app = require("express")();
 let jwt = require("jsonwebtoken");
-let Database = require("../Database");
+let Database = require("db");
 let crypto = require("crypto");
 
 function hash(password, salt){

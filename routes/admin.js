@@ -1,6 +1,6 @@
 let app = require("express")();
 
-let Database = require("../Database");
+let Database = require("db");
 
 function jsonpDump(collection, req, res){
   Database.then(function(db){

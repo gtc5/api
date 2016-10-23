@@ -1,4 +1,4 @@
-let Database = require("../Database");
+let Database = require("db");
 
 Database.then(function(db){
   db.collection("donors").insert([
