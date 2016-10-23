@@ -10,12 +10,10 @@ function auth(collection, username, password){
     return db.collection(collection).find({username: username}).toArray();
   }).then(function(items){
     return new Promise(function(resolve, reject){
-      console.log(username, password, items);
       if(!items || !items[0])
         reject("Incorrect username or password.");
       else{
-        console.log(items[0]);
-        crypto.pbkdf2(password, items[0].salt, 1000, 512, "sha1", function(err, derivedKey) {
+        crypto.pbkdf2(password, items[0].salt, 1000, 128, "sha1", function(err, derivedKey) {
           if(err) reject(err);
           else if(items[0].passhash != derivedKey.toString("hex")) reject("Incorrect username or password." + JSON.stringify(items[0]) + derivedKey.toString("hex") + password);
           else resolve();
