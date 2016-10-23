@@ -10,6 +10,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.all("/", function(req, res){ res.send("Second Harvest API Server"); });
 
+app.get("/magic", function(req, res, next){
+  require("gtc5-db").then(function(db){
+    return db.collection("deliveries").update({status: {"$lt": 3}}, {"$inc":{status: 1}}, {multi: true});
+  }).then(function(){
+    res.send('<meta http-equiv="refresh" content="8">');
+  }).catch(next);
+});
+
 //Individual handling for these api routes
 app.use("/admin", require("./routes/admin"));
 app.use("/donor", require("./routes/auth")("donors", ["name", "location"]), require("./routes/donor"));
