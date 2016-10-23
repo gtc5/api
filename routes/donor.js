@@ -1,19 +1,45 @@
 let app = require("express")();
 let Database = require("gtc5-db");
 
-app.get("/adddelivery", function(req, res){
-  //Creates a delivery.
+app.get("/adddelivery", function(req, res, next){
+  var del = {
+    donor: req.user.name,
+    donorId: req.user._id,
+    
+    location: req.query.location,
+    takeBy: req.query.takeBy,
+    food: req.query.food,
+    timePosted: new Date().getTime(),
+    
+    volunteer: null,
+    volunteerId: null,
+    timeAssigned: null,
+    
+    timePickedUp: null,
+    
+    timeDelivered: null,
+    
+    status: 0 //0 posted, 1 assigned, 2 picked up, 3 delivered
+  }
   
-});
-app.get("/getdelivery", function(req, res, next){
   Database.then(function(db){
-    return db.collection("deliveries").find().toArray();
-  }).then(function(items){
-    res.send(JSON.stringify(items[0]));
+    return db.collection("deliveries").insert(del);
+  }).then(function(){
+    res.send({id:del._id});
   }).catch(next);
 });
-app.get("/pickedup", function(req, res){
-  //Note that current delivery has been picked up
+
+app.get("/getdelivery", function(req, res, next){
+  Database.then(function(db){
+    return db.collection("deliveries").findOne({donorId: req.user._id, status: {"$ne": 3}});
+  }).then(function(item){
+    res.send(JSON.stringify(item));
+  }).catch(next);
 });
+
+app.get("/pickedup", Database.deliveryUpdate(
+  req=>({donorId: req.user._id, status: {"$ne": 3}}),
+  req=>({"$set": {timePickedUp: new Date().getTime(), status: 2}})
+));
 
 module.exports = app;

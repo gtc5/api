@@ -62,7 +62,7 @@ function createAccount(collection, entry, req, res){
   }).then(function(db){
     return db.collection(collection).insert(entry);
   }).then(function(inserted){
-    res.send({id: entry._id});
+    res.send({id: entry._id.toString()});
   }).catch(function(err){
     res.send({error: err});
   });
@@ -88,7 +88,7 @@ app.get("/donor/register", function(req, res){
 app.get("/donor/*", function(req, res, next){
   checkToken("donors", req.query.token)
   .then(getUserByToken("donors", req.query.token))
-  .then(function(user){req.user = user;})
+  .then(function(user){req.user = user; user._id = user._id.toString();})
   .then(next)
   .catch(function(){res.send({error: "Invalid token."});});
 });
@@ -107,7 +107,7 @@ app.get("/volunteer/register", function(req, res){
 app.get("/volunteer/*", function(req, res, next){
   checkToken("volunteers", req.query.token)
   .then(getUserByToken("volunteers", req.query.token))
-  .then(function(user){req.user = user;})
+  .then(function(user){req.user = user; user._id = user._id.toString();})
   .then(next)
   .catch(function(){res.send({error: "Invalid token."});});
 });

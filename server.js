@@ -20,7 +20,7 @@ app.use("/donor", require("./routes/donor"));
 app.use("/volunteer", require("./routes/volunteer"));
 
 app.use(function(err, req, res, next){
-  res.send("Oops, something broke! Check the logs.");
+  res.send("Oops, something broke! Error message: " + err);
   console.error(err);
 });
 

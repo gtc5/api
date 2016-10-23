@@ -1,4 +1,17 @@
+/* NOT NEEDED ANYMORE */
+/* USE register INSTEAD */
+
 let Database = require("gtc5-db");
+
+// Volunteer
+//   location-time pairs
+
+// Donor
+//   location
+
+// Delivery
+//   donor ID, donor name/other info, desired pickup time, pickup location, food [string containing all info], volunteer ID, 
+//   time of posting, time of confirmation, time of pickup, time of delivery, status
 
 Database.then(function(db){
   db.collection("donors").insert([
@@ -16,11 +29,14 @@ Database.then(function(db){
 	db.collection("deliveries").insert([
 	  {donor: "Alexander Hamilton",
 	  donorId: id,
-	  location: "New York City, New York, USA",
 	  takeBy: "2 Nov 1945 9:30:22PM",
 	  location: "460 King St. West",
-      food: "46 pounds of lettuce",
-	  status: 0}
+    food: "46 pounds of lettuce",
+    timePosted: new Date().getTime(),
+    // volunteerId, timeAssigned
+    // timePickedUp
+    // timeDelivered
+	  status: 0} //0 posted, 1 assigned, 2 picked up, 3 delivered
 	]);
   }).catch(function(err){
   	console.error("Error!", err);
