@@ -7,23 +7,24 @@ function hash(password, salt){
   return new Promise(function(resolve,reject){
     crypto.pbkdf2(password, salt, 1000, 128, "sha1", function(err, derivedKey) {
       if(err) reject(err);
-      else resolve(derivedKey);
+      else resolve(derivedKey.toString("hex"));
     });
   });
 }
 
 function auth(collection, username, password){
-  var db;
+  var db, passhash;
   return Database.then(function(_db){
     db = _db;
     return db.collection(collection).find({username: username}).toArray();
   })
   .then(function(items){
     if(!items || !items[0]) throw new Error;
+    passhash = items[0].passhash;
     return hash(password, items[0].salt);
   })
   .then(function(derivedKey){
-    if(items[0].passhash != derivedKey.toString("hex")) throw new Error;
+    if(passhash != derivedKey) throw new Error;
   })
   .then(genToken)
   .then(function(token){
@@ -52,14 +53,14 @@ function createAccount(collection, entry, req, res){
   //TODO: verification that the input is well-formed
   // - non duplicate username, valid username, password
   
-  return genToken().then(function(token){
-    entry.token = token;
-    return hash(req.query.password, token);
+  return genToken().then(function(salt){
+    entry.salt = salt;
+    return hash(req.query.password, salt);
   }).then(function(passhash){
     entry.passhash = passhash;
     return Database;
   }).then(function(db){
-    return db.collection("donors").insert(entry);
+    return db.collection(collection).insert(entry);
   }).then(function(inserted){
     res.send({id: entry._id});
   }).catch(function(err){
@@ -83,7 +84,7 @@ app.get("/donor/*", function(req, res, next){
 });
 
 app.get("/volunteer/auth", function(req, res){
-  auth("donors", req.query.username, req.query.password)
+  auth("volunteers", req.query.username, req.query.password)
   .then(function(token){res.send({token: token});})
   .catch(function(err){console.error(err);res.send({error: "Incorrect username or password."});});
 });
