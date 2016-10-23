@@ -7,7 +7,7 @@ app.all("/adddelivery", function(req, res, next){
     donorId: req.user._id,
     location: req.query.location || req.user.location,
     
-    takeBy: req.query.takeBy,
+    takeBy: req.query.takeBy || req.query.takeby,
     food: req.query.food,
     timePosted: new Date().getTime(),
     
