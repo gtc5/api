@@ -40,12 +40,13 @@ function genToken(){
     });
   });
 }
-function checkToken(collection, token){
+function getUserByToken(collection, token){
   return Database.then(function(db){
     return db.collection(collection).find({token: token}).toArray();
   }).then(function(items){
     if(!token || !items || !items[0] || items[0].token != token)
       throw new Error;
+    else return items[0];
   });
 }
 function createAccount(collection, entry, req, res){
@@ -68,12 +69,6 @@ function createAccount(collection, entry, req, res){
   });
 }
 
-function getUserByToken(collection, token){
-  return Database.then(function(db){
-    return db.collection(collection).findOne({token: token});
-  });
-}
-
 function tokenFrom(req){
   return req.header("Authorization") || req.query.token;
 }
@@ -90,8 +85,7 @@ app.get("/donor/register", function(req, res){
   createAccount("donors", entry, req, res);
 });
 app.get("/donor/*", function(req, res, next){
-  checkToken("donors", tokenFrom(req))
-  .then(getUserByToken("donors", tokenFrom(req)))
+  getUserByToken("donors", tokenFrom(req))
   .then(function(user){req.user = user; user._id = user._id.toString();})
   .then(next)
   .catch(function(){res.send({error: "Invalid token."});});
@@ -109,8 +103,7 @@ app.get("/volunteer/register", function(req, res){
   createAccount("volunteers", entry, req, res);
 });
 app.get("/volunteer/*", function(req, res, next){
-  checkToken("volunteers", tokenFrom(req))
-  .then(getUserByToken("volunteers", tokenFrom(req)))
+  getUserByToken("volunteers", tokenFrom(req))
   .then(function(user){req.user = user; user._id = user._id.toString();})
   .then(next)
   .catch(function(){res.send({error: "Invalid token."});});
