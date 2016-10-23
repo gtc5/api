@@ -31,7 +31,7 @@ app.all("/adddelivery", function(req, res, next){
 
 app.all("/getdelivery", function(req, res, next){
   Database.then(function(db){
-    return db.collection("deliveries").find({donorId: req.user._id, status: {"$ne": 3}}).toArray();
+    return db.collection("deliveries").findOne({donorId: req.user._id, status: {"$ne": 3}});
   }).then(function(del){res.send(del);}).catch(next);
 });
 
