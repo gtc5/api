@@ -5,8 +5,8 @@ app.all("/adddelivery", function(req, res, next){
   var del = {
     donor: req.user.name,
     donorId: req.user._id,
+    location: req.user.location,
     
-    location: req.query.location,
     takeBy: req.query.takeBy,
     food: req.query.food,
     timePosted: new Date().getTime(),
