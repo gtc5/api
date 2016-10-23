@@ -1,12 +1,14 @@
 let app = require("express")();
 let Database = require("gtc5-db");
 
-app.get("/availableDeliveries", function(req, res){
-  
+app.get("/availableDeliveries", function(req, res, next){
+  Database.then(function(db){
+    return db.collection("deliveries").find().toArray();
+  }).then(res.send).catch(next);
 });
 app.get("/myDeliveries", function(req, res, next){
   Database.then(function(db){
-    db.collection("volunteer").find({volunteerId: new (require("mongodb").ObjectID)(req.user._id)});
+    return db.collection("deliveries").find({volunteerId: new (require("mongodb").ObjectID)(req.user._id)}).toArray();
   }).then(res.send).catch(next);
 });
 app.get("/assign", Database.deliveryUpdate(
