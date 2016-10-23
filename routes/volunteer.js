@@ -4,12 +4,12 @@ let Database = require("gtc5-db");
 app.get("/availableDeliveries", function(req, res, next){
   Database.then(function(db){
     return db.collection("deliveries").find().toArray();
-  }).then(function(items){res.send(items);}).catch(next);
+  }).then(res.send).catch(next);
 });
 app.get("/myDeliveries", function(req, res, next){
   Database.then(function(db){
     return db.collection("deliveries").find({volunteerId: new (require("mongodb").ObjectID)(req.user._id)}).toArray();
-  }).then(function(items){res.send(items);}).catch(next);
+  }).then(res.send).catch(next);
 });
 app.get("/assign", Database.deliveryUpdate(
   req=>({_id: new (require("mongodb").ObjectID)(req.params.deliveryId), status: 0}),
