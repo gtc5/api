@@ -21,8 +21,8 @@ function jsonpDump(collection, req, res){
 }
 
 
-app.get("/volunteers", function(req, res){ jsonpDump("volunteers", req, res); });
-app.get("/donors", function(req, res){ jsonpDump("donors", req, res); });
-app.get("/deliveries", function(req, res){ jsonpDump("deliveries", req, res); });
+app.all("/volunteers", function(req, res){ jsonpDump("volunteers", req, res); });
+app.all("/donors", function(req, res){ jsonpDump("donors", req, res); });
+app.all("/deliveries", function(req, res){ jsonpDump("deliveries", req, res); });
 
 module.exports = app;

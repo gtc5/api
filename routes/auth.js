@@ -74,18 +74,18 @@ function tokenFrom(req){
 
 var collection = null, props = null;
 
-app.get("/auth", function(req, res){
+app.all("/auth", function(req, res){
   auth(collection, req.query.username, req.query.password)
   .then(function(token){res.send({token: token});})
   .catch(function(err){console.error(err);res.send(401, {error: "Incorrect username or password."});});
 });
-app.get("/register", function(req, res){
+app.all("/register", function(req, res){
   var entry = {};
   for(var i = 0; i < props.length; i++)
     entry[props[i]] = req.query[props[i]];
   createAccount(collection, entry, req, res);
 });
-app.get("/*", function(req, res, next){
+app.all("/*", function(req, res, next){
   getUserByToken(collection, tokenFrom(req))
   .then(function(user){req.user = user; user._id = user._id.toString();})
   .then(next)

@@ -1,7 +1,7 @@
 let app = require("express")();
 let Database = require("gtc5-db");
 
-app.get("/adddelivery", function(req, res, next){
+app.all("/adddelivery", function(req, res, next){
   var del = {
     donor: req.user.name,
     donorId: req.user._id,
@@ -29,13 +29,13 @@ app.get("/adddelivery", function(req, res, next){
   }).catch(next);
 });
 
-app.get("/getdelivery", function(req, res, next){
+app.all("/getdelivery", function(req, res, next){
   Database.then(function(db){
     return db.collection("deliveries").find({donorId: req.user._id, status: {"$ne": 3}}).toArray();
   }).then(function(del){res.send(del);}).catch(next);
 });
 
-app.get("/pickedup", Database.deliveryUpdate(
+app.all("/pickedup", Database.deliveryUpdate(
   req=>({donorId: req.user._id, status: {"$ne": 3}}),
   req=>({"$set": {timePickedUp: new Date().getTime(), status: 2}})
 ));

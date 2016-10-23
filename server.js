@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 33033;
 
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.get("/", function(req, res){ res.send("Second Harvest API Server"); });
+app.all("/", function(req, res){ res.send("Second Harvest API Server"); });
 
 //Individual handling for these api routes
 app.use("/admin", require("./routes/admin"));
