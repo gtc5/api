@@ -1,4 +1,4 @@
-let Database = require("db");
+let Database = require("gtc5-db");
 
 Database.then(function(db){
   db.collection("donors").insert([

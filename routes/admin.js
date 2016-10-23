@@ -1,6 +1,6 @@
 let app = require("express")();
 
-let Database = require("db");
+let Database = require("gtc5-db");
 
 function jsonpDump(collection, req, res){
   Database.then(function(db){

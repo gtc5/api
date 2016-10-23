@@ -1,5 +1,5 @@
 let app = require("express")();
-let Database = require("db");
+let Database = require("gtc5-db");
 
 app.get("/adddelivery", function(req, res){
   //Creates a delivery.
