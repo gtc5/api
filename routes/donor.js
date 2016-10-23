@@ -32,7 +32,7 @@ app.all("/adddelivery", function(req, res, next){
 app.all("/getdelivery", function(req, res, next){
   Database.then(function(db){
     return db.collection("deliveries").find({donorId: req.user._id, status: {"$ne": 3}})
-      .sort({timePosted: -1}).toArray()
+      .sort({timePosted: -1}).toArray();})
       .then(function(dels){res.send(dels[0]);}).catch(next);
 });
 
