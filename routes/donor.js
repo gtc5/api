@@ -20,7 +20,7 @@ app.get("/adddelivery", function(req, res, next){
     timeDelivered: null,
     
     status: 0 //0 posted, 1 assigned, 2 picked up, 3 delivered
-  }
+  };
   
   Database.then(function(db){
     return db.collection("deliveries").insert(del);

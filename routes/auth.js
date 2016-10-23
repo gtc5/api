@@ -1,5 +1,4 @@
 let app = require("express")();
-let jwt = require("jsonwebtoken");
 let Database = require("gtc5-db");
 let crypto = require("crypto");
 
@@ -30,7 +29,7 @@ function auth(collection, username, password){
   .then(function(token){
     db.collection(collection).update({username: username}, {"$set": {token: token}});
     return token;
-  })
+  });
 }
 function genToken(){
   return new Promise(function(resolve,reject){
@@ -73,40 +72,27 @@ function tokenFrom(req){
   return req.header("Authorization") || req.query.token;
 }
 
-app.get("/donor/auth", function(req, res){
-  auth("donors", req.query.username, req.query.password)
+var collection = null;
+
+app.get("/auth", function(req, res){
+  auth(collection, req.query.username, req.query.password)
   .then(function(token){res.send({token: token});})
   .catch(function(err){console.error(err);res.send({error: "Incorrect username or password."});});
 });
-app.get("/donor/register", function(req, res){
+app.get("/register", function(req, res){
   var entry = {};
   entry.name = req.query.name;
   entry.location = req.query.location;
-  createAccount("donors", entry, req, res);
+  createAccount(collection, entry, req, res);
 });
-app.get("/donor/*", function(req, res, next){
-  getUserByToken("donors", tokenFrom(req))
+app.get("/*", function(req, res, next){
+  getUserByToken(collection, tokenFrom(req))
   .then(function(user){req.user = user; user._id = user._id.toString();})
   .then(next)
   .catch(function(){res.send({error: "Invalid token."});});
 });
 
-app.get("/volunteer/auth", function(req, res){
-  auth("volunteers", req.query.username, req.query.password)
-  .then(function(token){res.send({token: token});})
-  .catch(function(err){console.error(err);res.send({error: "Incorrect username or password."});});
-});
-app.get("/volunteer/register", function(req, res){
-  var entry = {};
-  entry.name = req.query.name;
-  entry.availability = req.query.availability;
-  createAccount("volunteers", entry, req, res);
-});
-app.get("/volunteer/*", function(req, res, next){
-  getUserByToken("volunteers", tokenFrom(req))
-  .then(function(user){req.user = user; user._id = user._id.toString();})
-  .then(next)
-  .catch(function(){res.send({error: "Invalid token."});});
-});
 
-module.exports = app;
+module.exports = function(collection){
+  return app;
+};
